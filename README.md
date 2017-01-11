@@ -1,5 +1,6 @@
 # VBA Classes
 
+* VBA classes for running SQL queries and returning as ranges. *
 
 ## RecordsetToRange
 
