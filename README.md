@@ -10,7 +10,7 @@
 #### `create(rs, rng)`
 Prints the recordset (`rs`) into the range (`rng`).
 * `rs`
-  * Type: ADODB.Recordset
+  * Type: `ADODB.Recordset`
 * `rng`
   * Type: `Range`
   * Top left cell of the desired output range. Must be a single cell (e.g. `Range("A1")`).
@@ -82,10 +82,10 @@ Sub sqlTest()
     Dim query As String
 
     'Query that will be run.
-    query = "select count(*) as Count from USSGLW.dbo.bop_ht"
+    query = "select count(*) as Count from db.tbl"
 
     'Set connection string.
-    sqlObj.connStr = "Steel Server"
+    sqlObj.connStr = "Driver={SQL Server};Server=server.address.com;Database=db;Uid=user;Pwd=pass;"
 
     'If a connection can be made...
     If sqlObj.isConnValid Then
@@ -105,9 +105,57 @@ End Sub
 
 
 ## Sql
+*Handles SQL database connecting, querying, etc.*
+
+Important: "Microsoft ActiveX Data Objects" must be enabled. This is can be enabled in the `Tools->References` menu.
 
 ### Methods
 
+#### `isConnValid(query)`
+Checks whether a connection can be made using the current settings.
+* Return Type: `Boolean`
+
+#### `runQuery(query)`
+Runs a query. Connection is automatically opened and closed.
+* `query`
+  * Type: `String`
+* Return Type: `ADODB.Recordset`
+
+#### `typeNumToDesc(typeNum)`
+Accepts type numbers and returns type descriptions as strings.
+* `typeNum`
+  * Type: `Integer`
+* Return Type: `String`
+
 ### Settings
 
+#### `connStr`
+Connection string. 
+* Type: `String`
+
 ### Example
+```vba
+Sub sqlTest()
+    Dim sqlObj As Sql
+    Set sqlObj = New Sql
+    Dim rs As ADODB.Recordset
+    Dim query As String
+
+    'Query that will be run.
+    query = "select count(*) from db.tbl"
+
+    'Set connection string.
+    sqlObj.connStr = "Driver={SQL Server};Server=server.address.com;Database=db;Uid=user;Pwd=pass;"
+
+    'If a connection can be made...
+    If sqlObj.isConnValid Then
+        'Then run the query and store the results in the rs (recordset) variable.
+        Set rs = sqlObj.runQuery(query)
+    End If
+    
+    Debug.Print rs(0)
+    
+    'Close the recordset and connection.
+    rs.Close
+End Sub
+```
