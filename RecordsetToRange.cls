@@ -13,11 +13,13 @@ Attribute VB_Exposed = False
 ' .headerTopAlign = {"center", "left", or "right"}
 ' .headerLeft = {Boolean}
 ' .headerLeftAlign = {"center", "left", or "right"}
+' .headerFontSize = {Integer}
 
 
 Private pTitle As String
 Private pRotate As Boolean
 Private pBorder As Boolean
+Private pFieldNames As Boolean
 
 Private Type header
     position As String
@@ -25,6 +27,7 @@ Private Type header
     leftAlign As String
     top As Boolean
     topAlign As String
+    fontSize As Integer
 End Type
 
 Private pHeader As header
@@ -35,6 +38,7 @@ Private Sub Class_Initialize()
     pBorder = False
     pRotate = False
     pTitle = ""
+    pFieldNames = True
     
     With pHeader
         .position = "top"
@@ -42,6 +46,7 @@ Private Sub Class_Initialize()
         .leftAlign = ""
         .top = False
         .topAlign = ""
+        .fontSize = 12
     End With
 End Sub
 
@@ -60,6 +65,13 @@ Public Property Get rotate() As Boolean
 End Property
 Public Property Let rotate(value As Boolean)
     pRotate = value
+End Property
+
+Public Property Get fieldNames() As Boolean
+    fieldNames = pFieldNames
+End Property
+Public Property Let fieldNames(value As Boolean)
+    pFieldNames = value
 End Property
 
 Public Property Get headerTop() As Boolean
@@ -112,6 +124,13 @@ Public Property Let headerLeftAlign(value As String)
     pHeader.leftAlign = value
 End Property
 
+Public Property Get headerFontSize() As Integer
+    headerFontSize = pHeader.fontSize
+End Property
+Public Property Let headerFontSize(value As Integer)
+    pHeader.fontSize = value
+End Property
+
 Public Property Get border() As Boolean
     border = pBorder
 End Property
@@ -153,7 +172,7 @@ Public Sub create(ByVal rs As ADODB.Recordset, rng As Range)
             For i = 0 To rs.Fields.Count - 1    'Loop thru rows (recordset fields).
                 rs.MoveFirst
                 
-                rngHead.Offset(i, 0).value = rs.Fields(i).name
+                rngHead.Offset(i, 0).value = rs.Fields(i).Name
                 If i = 0 And pHeader.top Then
                     Call styleHeader(rngHead.Offset(i, 0), pHeader.topAlign)    'Style top header.
                 ElseIf pHeader.left Then
@@ -202,13 +221,16 @@ Public Sub create(ByVal rs As ADODB.Recordset, rng As Range)
                 Set rngHead = rngHead.Offset(1, 0)
             End If
 
-            'Specify head and body of output table.
-            Set rngBody = rngHead.Offset(1, 0)
-
             'Build the top header row.
-            For i = 0 To rs.Fields.Count - 1
-                rngHead.Offset(0, i).value = rs.Fields(i).name
-            Next
+            If pFieldNames Then
+                For i = 0 To rs.Fields.Count - 1
+                    rngHead.Offset(0, i).value = rs.Fields(i).Name
+                Next
+                
+                Set rngBody = rngHead.Offset(1, 0)
+            Else
+                Set rngBody = rngHead
+            End If
 
             'Style headers.
             'Left header goes first to make sure the top header style can override the first column header.
@@ -241,9 +263,7 @@ Public Sub create(ByVal rs As ADODB.Recordset, rng As Range)
                                 formatStr = formatStr & "0"
                             Next j
                         Case adDBTimeStamp  'Datetime
-                            formatStr = "m/d/yyyy h:mm;@"
-                        Case adDate  'Datetime
-                            formatStr = "m/d/yyyy h:mm;@"
+                            formatStr = "m/d/yy h:mm;@"
                         Case Else
                             formatStr = "General"
                     End Select
@@ -279,6 +299,7 @@ Public Sub styleHeader(rng As Range, hAlign As String)
         .Borders.ThemeColor = 4
         .Borders.Weight = xlThin
         .Font.Bold = True
+        .Font.size = pHeader.fontSize
 
         Select Case LCase(hAlign)
             Case "center"
