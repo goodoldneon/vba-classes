@@ -15,6 +15,9 @@ Prints the recordset (`rs`) into the range (`rng`).
 * `rng`
   * Type: `Range`
   * Top left cell of the desired output range. Must be a single cell (e.g. `Range("A1")`).
+* Automatically formats cells for some field data types.
+  * `adNumeric`: Formats with decimal places equal to the `NumericScale`. For example, data type `decimal(10, 2)` would be formatted to 2 decimal places.
+  * `adDBTimeStamp`: Formats as 'm/d/yy h:mm;@'.
 
 #### `resetToDefaults()`
 Reset settings back to defaults.
