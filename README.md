@@ -136,6 +136,7 @@ Accepts type numbers and returns type descriptions as strings.
 #### `connStr`
 Connection string. 
 * Type: `String`
+* Contains `select` statement for connection string aliases.
 
 ### Example
 ```vba
