@@ -255,18 +255,20 @@ Public Sub create(ByVal rs As ADODB.Recordset, rng As Range)
 
                 'Format cell numbers.
                 For i = 0 To rs.Fields.Count - 1
-                    Select Case rs.Fields(i).Type
-                        Case adNumeric
-                            'Format same number of decimal places (NumericScale)
-                            formatStr = "0."
-                            For j = 1 To rs.Fields(i).NumericScale
-                                formatStr = formatStr & "0"
-                            Next j
-                        Case adDBTimeStamp  'Datetime
-                            formatStr = "m/d/yy h:mm;@"
-                        Case Else
-                            formatStr = "General"
-                    End Select
+                    'If field type is adNumeric.
+                    If rs.Fields(i).Type = adNumeric Or rs.Fields(i).Type = 131 Then
+                        'Format same number of decimal places (NumericScale)
+                        formatStr = "0."
+                        For j = 1 To rs.Fields(i).NumericScale
+                            formatStr = formatStr & "0"
+                        Next j
+                    'Else if field type is adDBTimeStamp.
+                    ElseIf rs.Fields(i).Type = adDBTimeStamp Or rs.Fields(i).Type = 7 Then
+                        'Format as date.
+                        formatStr = "m/d/yy h:mm;@"
+                    Else
+                        formatStr = "General"
+                    End If
                     
                     Range(rngBody.Offset(0, i), rngBody.Offset(rs.RecordCount - 1, i)).NumberFormat = formatStr
                 Next
