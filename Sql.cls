@@ -18,9 +18,12 @@ End Property
 
 
 Property Let connStr(value As String)
+    'Case statement for custom connection string aliases. These are placeholders, so change them.
     Select Case LCase(value)
-        Case "steel server"
-            value = "Driver={SQL Server};Server=uss-stlsvr.glw.uss.com;Database=USSGLW;Uid=gsm_ro;Pwd=stlmakero;"
+        Case "mssql"
+            value = "Driver={SQL Server};Server=server.address;Database=db;Uid=user;Pwd=pass;"
+        Case "access"
+            value = "Provider=Microsoft.ACE.OLEDB.12.0; Data Source=path\to\access\db.accdb;"
     End Select
 
     pConnStr = value
