@@ -2,6 +2,18 @@
 
 *VBA classes for running SQL queries and returning as ranges.*
 
+## Optimize
+
+*Makes VBA run more quickly be temporarily disabling screen updating, events, auto calculation, and page breaks.*
+
+### Methods
+
+#### `optimizeStart()`
+Call before the code you want to speed up.
+
+#### `optimizeEnd()`
+Call after the code you want to speed up.
+
 ## RecordsetToRange
 
 *Prints recordsets as Excel ranges, with optional styling.*
@@ -136,6 +148,7 @@ Accepts type numbers and returns type descriptions as strings.
 #### `connStr`
 Connection string. 
 * Type: `String`
+* Contains `select` statement for connection string aliases.
 
 ### Example
 ```vba
