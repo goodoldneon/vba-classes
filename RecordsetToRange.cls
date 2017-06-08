@@ -173,9 +173,9 @@ Public Sub create(ByVal rs As ADODB.Recordset, rng As Range)
                 rs.MoveFirst
                 
                 rngHead.Offset(i, 0).value = rs.Fields(i).Name
-                If i = 0 And pHeader.top Then
+                If i = 0 And pHeader.top And pFieldNames Then
                     Call styleHeader(rngHead.Offset(i, 0), pHeader.topAlign)    'Style top header.
-                ElseIf pHeader.left Then
+                ElseIf pHeader.left And pFieldNames Then
                     Call styleHeader(rngHead.Offset(i, 0), pHeader.leftAlign)   'Style left header.
                 End If
 
@@ -183,7 +183,7 @@ Public Sub create(ByVal rs As ADODB.Recordset, rng As Range)
                 For j = 1 To rs.RecordCount
                     rngHead.Offset(i, j).value = rs(i)  'Data.
 
-                    If i = 0 And pHeader.top Then
+                    If i = 0 And pHeader.top And pFieldNames Then
                         Call styleHeader(rngHead.Offset(i, j), pHeader.topAlign)    'Style top header.
                     End If
 
@@ -236,11 +236,11 @@ Public Sub create(ByVal rs As ADODB.Recordset, rng As Range)
 
             'Style headers.
             'Left header goes first to make sure the top header style can override the first column header.
-            If pHeader.left Then
+            If pHeader.left And pFieldNames Then
                 Call styleHeader(Range(rngHead, rngHead.Offset(rs.RecordCount, 0)), pHeader.leftAlign)
             End If
             
-            If pHeader.top Then
+            If pHeader.top And pFieldNames Then
                 Call styleHeader(Range(rngHead, rngHead.Offset(0, rs.Fields.Count - 1)), pHeader.topAlign)
             End If
         End With
